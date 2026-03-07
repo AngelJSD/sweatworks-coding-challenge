@@ -1,14 +1,21 @@
 import express from 'express';
+import { v1Router } from './infrastructure/http/routes/v1/v1.routes';
+import { initializeDatabase } from './typeorm-setup';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
+app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello API' });
-});
+initializeDatabase().then(() => {
+  app.get('/', (req, res) => {
+    res.send({ message: 'Hello API' });
+  });
 
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
+  app.use("/api/v1", v1Router);
+
+  app.listen(port, host, () => {
+    console.log(`[ ready ] http://${host}:${port}`);
+  });
 });
