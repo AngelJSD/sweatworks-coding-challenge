@@ -1,0 +1,26 @@
+{
+  "name": "@sweatworks/fitness-member-management-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@sweatworks/fitness-member-management"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/fitness-member-management-e2e/jest.config.cts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@sweatworks/fitness-member-management:build",
+          "@sweatworks/fitness-member-management:serve"
+        ]
+      }
+    }
+  }
+}
