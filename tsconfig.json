@@ -8,6 +8,12 @@
     },
     {
       "path": "./apps/fitness-member-management"
+    },
+    {
+      "path": "./fitness-member-management-ui-e2e"
+    },
+    {
+      "path": "./fitness-member-management-ui"
     }
   ]
 }
