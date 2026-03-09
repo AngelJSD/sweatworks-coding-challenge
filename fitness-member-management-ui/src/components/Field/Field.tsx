@@ -11,6 +11,7 @@ interface FieldProps {
   defaultValue?: string;
   description?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export default function Field({
@@ -22,17 +23,13 @@ export default function Field({
   defaultValue,
   description,
   placeholder,
-}: FieldProps): React.ReactNode {
+  disabled,
+}: FieldProps): React.ReactElement {
   return (
-    <FieldBase.Root name={name} id={id} className={styles.FieldBase}>
+    <FieldBase.Root disabled={disabled} name={name} id={id} className={styles.Field}>
       <FieldBase.Label className={styles.Label}>{label}</FieldBase.Label>
       <FieldBase.Control type={type} required={required} placeholder={placeholder} defaultValue={defaultValue} className={styles.Input} />
 
-      {required && (
-        <FieldBase.Error className={styles.Error} match="valueMissing">
-          This field is required
-        </FieldBase.Error>
-      )}
       <FieldBase.Error className={styles.Error} />
 
       {description && <FieldBase.Description className={styles.Description}>{description}</FieldBase.Description>}
