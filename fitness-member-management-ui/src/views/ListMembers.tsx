@@ -3,14 +3,15 @@ import Button from '../components/Button/Button';
 import Dialog from '../components/Dialog/Dialog';
 import Field from '../components/Field/Field';
 import Form from '../components/Form/Form';
-import z, { ZodArray, ZodError } from 'zod';
+import z, { ZodError } from 'zod';
 import { CreateMemberSchema } from '../schemas/member.schema';
-import { useCreateMember } from '../hooks/useMembers';
+import { useCreateMember, useGetAllMembers } from '../hooks/useMembers';
 
 export function ListMembers(): React.ReactElement {
   const [openDialog, setOpenDialog] = useState(false);
   const [errors, setErrors] = useState<Record<string, any>>({});
 
+  const { data: members, isLoading: getAllMembersIsLoading } = useGetAllMembers();
   const { mutate: createMember, isPending: createMemberIsLaoding } = useCreateMember();
 
   function handleOpenDialog() {
@@ -57,7 +58,12 @@ export function ListMembers(): React.ReactElement {
 
   return (
     <div>
-      <Button onClick={handleOpenDialog}>Create Member</Button>
+      <Button onClick={handleOpenDialog}>Create new member</Button>
+      {getAllMembersIsLoading ? <div>Loading...</div> : members?.map((member: any) => (
+        <div key={member.id}>
+          <span>{`${member.firstName} ${member.lastName}`}</span>
+        </div>
+      ))}
       <Dialog title='Create a new member' open={openDialog} onOpenChange={handleChangeOpenDialog}>
         <Form onSubmit={handleSubmit} errors={errors}>
           <Field label='First Name' name='firstName' id='firstName' type='text' disabled={createMemberIsLaoding} required />

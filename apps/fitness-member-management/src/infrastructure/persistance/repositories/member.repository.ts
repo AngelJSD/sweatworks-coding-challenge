@@ -21,10 +21,14 @@ export class MemberRepository implements MemberRepositoryInterface {
 
   async save(member: CreateMemberInput): Promise<Member> {
     const entity = this.repository.create(member);
-    console.log('ENTITY!')
     const savedEntity = await this.repository.save(entity);
-    console.log('SAVED!')
     
     return MemberMapper.toDomain(savedEntity);
+  }
+
+  async getAll(): Promise<Array<Member>> {
+    const memberEntities = await this.repository.find();
+
+    return memberEntities.map(memberEntity => MemberMapper.toDomain(memberEntity))
   }
 }

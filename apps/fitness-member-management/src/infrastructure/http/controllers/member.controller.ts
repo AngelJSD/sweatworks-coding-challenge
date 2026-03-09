@@ -2,18 +2,28 @@ import { Request, Response } from "express";
 
 import { ZodError } from "zod";
 import { CreateMember } from "../../../application/createMember";
+import { ListMembers } from "../../../application/listMembers";
 
 export class MemberController {
   constructor(
     private readonly createMember: CreateMember,
+    private readonly listMembers: ListMembers,
     // private readonly getMemberUseCase: GetMemberUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
     try {
-      console.log(req.body);
-      const user = await this.createMember.execute(req.body);
-      res.status(201).json(user);
+      const member = await this.createMember.execute(req.body);
+      res.status(201).json(member);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  }
+
+  async getAll(_req: Request, res: Response): Promise<void> {
+    try {
+      const members = await this.listMembers.execute();
+      res.status(200).json(members);
     } catch (error) {
       this.handleError(res, error);
     }

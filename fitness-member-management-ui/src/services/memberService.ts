@@ -44,4 +44,20 @@ export class MemberService {
     }
     return res.json();
   }
+
+  async getAllMembers() {
+    const res = await fetch(
+      `http://localhost:3000/api/v1/members/list`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Error getting all members");
+    }
+    return res.json();
+  }
 }
