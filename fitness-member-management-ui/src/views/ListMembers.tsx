@@ -6,6 +6,30 @@ import Form from '../components/Form/Form';
 import z, { ZodError } from 'zod';
 import { CreateMemberSchema } from '../schemas/member.schema';
 import { useCreateMember, useGetAllMembers } from '../hooks/useMembers';
+import { HeaderObject, SimpleTable } from 'simple-table-core';
+import "simple-table-core/styles.css";
+
+const headers: Array<HeaderObject> = [
+  {
+    accessor: "firstName",
+    label: "First Name",
+    minWidth: 80,
+    width: "1fr",
+    isSortable: true,
+    type: "string",
+  },
+  {
+    accessor: "lastName",
+    label: "Last Name",
+    minWidth: 80,
+    width: "1fr",
+    isSortable: true,
+    type: "string",
+  },
+  { accessor: "email", label: "Email", minWidth: 80, width: "1fr", isSortable: true, type: "string" },
+  { accessor: "age", label: "Age", width: 100, isSortable: true, type: "number" },
+  { accessor: "updateDate", label: "Update Date", width: 150, isSortable: true, type: "date" },
+];
 
 export function ListMembers(): React.ReactElement {
   const [openDialog, setOpenDialog] = useState(false);
@@ -59,11 +83,12 @@ export function ListMembers(): React.ReactElement {
   return (
     <div>
       <Button onClick={handleOpenDialog}>Create new member</Button>
-      {getAllMembersIsLoading ? <div>Loading...</div> : members?.map((member: any) => (
-        <div key={member.id}>
-          <span>{`${member.firstName} ${member.lastName}`}</span>
-        </div>
-      ))}
+      {getAllMembersIsLoading ? <div>Loading...</div> : (
+        <SimpleTable
+          defaultHeaders={headers}
+          rows={members}
+        />
+      )}
       <Dialog title='Create a new member' open={openDialog} onOpenChange={handleChangeOpenDialog}>
         <Form onSubmit={handleSubmit} errors={errors}>
           <Field label='First Name' name='firstName' id='firstName' type='text' disabled={createMemberIsLaoding} required />
