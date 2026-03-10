@@ -1,7 +1,7 @@
 import { Repository, DataSource } from "typeorm";
 import { MemberEntity } from "../entities/member.entity";
 import { MemberMapper } from "../mappers/member.mapper";
-import { CreateMemberInput, Member } from "../../../domain/models/memeber.model";
+import { CreateMemberInput, Member } from "../../../domain/models/member.model";
 import { MemberRepositoryInterface } from "../../../domain/repositories/member.repository.interface";
 
 export class MemberRepository implements MemberRepositoryInterface {

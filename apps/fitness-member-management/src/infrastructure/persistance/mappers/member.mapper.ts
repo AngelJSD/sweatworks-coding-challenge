@@ -1,4 +1,4 @@
-import { Member as MemberModel, MemberSchema } from "../../../domain/models/memeber.model";
+import { Member as MemberModel, MemberSchema } from "../../../domain/models/member.model";
 import { MemberEntity } from "../entities/member.entity";
 
 export class MemberMapper {

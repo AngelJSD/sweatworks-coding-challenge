@@ -1,4 +1,4 @@
-import { CreateMemberSchema, Member } from "../domain/models/memeber.model";
+import { CreateMemberSchema, Member } from "../domain/models/member.model";
 import { MemberRepositoryInterface } from "../domain/repositories/member.repository.interface";
 
 export class CreateMember {

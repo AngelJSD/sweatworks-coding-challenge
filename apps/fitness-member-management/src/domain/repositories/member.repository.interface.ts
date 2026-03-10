@@ -1,4 +1,4 @@
-import { CreateMemberInput, Member } from "../models/memeber.model";
+import { CreateMemberInput, Member } from "../models/member.model";
 
 export interface MemberRepositoryInterface {
   findById(id: string): Promise<Member | undefined>;

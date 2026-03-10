@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import { MemberEntity } from "./infrastructure/persistance/entities/member.entity";
+import { MembershipEntity } from "./infrastructure/persistance/entities/membership.entity";
+import { PlanEntity } from "./infrastructure/persistance/entities/plan.entity";
 
 export const dataSource = new DataSource({
   type: "postgres",
@@ -9,7 +11,7 @@ export const dataSource = new DataSource({
   password: "dev_password",
   database: "dev_db",
   logging: false,
-  entities: [MemberEntity],
+  entities: [MemberEntity, MembershipEntity, PlanEntity],
   migrations: [__dirname + '/migrations/*.{ts,js}'],
   subscribers: [],
 });

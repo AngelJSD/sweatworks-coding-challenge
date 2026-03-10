@@ -1,4 +1,4 @@
-import { Member } from "../domain/models/memeber.model";
+import { Member } from "../domain/models/member.model";
 import { MemberRepositoryInterface } from "../domain/repositories/member.repository.interface";
 
 export class ListMembers {
