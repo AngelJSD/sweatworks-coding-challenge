@@ -1,3 +1,5 @@
+import { Member } from "../schemas/member.schema";
+
 export type MemberServiceNullData = {
   createMember?: Promise<any> | any;
 }
@@ -57,6 +59,26 @@ export class MemberService {
     );
     if (!res.ok) {
       throw new Error("Error getting all members");
+    }
+    return res.json();
+  }
+
+  async getMemberById(memberId: string | undefined) {
+    if (memberId === undefined) {
+      throw new Error("Error memberId is undefined");
+    }
+
+    const res = await fetch(
+      `http://localhost:3000/api/v1/members/:memberId`.replace(':memberId', memberId),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Error getting member info");
     }
     return res.json();
   }

@@ -11,10 +11,10 @@ export class MemberRepository implements MemberRepositoryInterface {
     this.repository = dataSource.getRepository(MemberEntity);
   }
 
-  async findById(id: string): Promise<Member | null> {
+  async findById(id: string): Promise<Member | undefined> {
     const entity = await this.repository.findOneBy({ id });
     
-    if (!entity) return null;
+    if (!entity) return undefined;
 
     return MemberMapper.toDomain(entity);
   }

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServices } from "../contexts/servicesContext";
-import { CreateMemberInput } from "../schemas/member.schema";
+import { CreateMemberInput, Member } from "../schemas/member.schema";
 
 export function useCreateMember() {
   const { memberService } = useServices();
@@ -19,5 +19,15 @@ export function useGetAllMembers() {
   return useQuery({
     queryKey: ['members'],
     queryFn: async () => memberService.getAllMembers(),
+  });
+}
+
+export function useGetMemberById(memberId: string | undefined) {
+  const { memberService } = useServices();
+
+  return useQuery<Member>({
+    queryKey: ['member', memberId],
+    queryFn: async () => memberService.getMemberById(memberId),
+    enabled: memberId !== undefined,
   });
 }

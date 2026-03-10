@@ -8,7 +8,7 @@ interface FieldProps {
   name: string;
   type: HTMLInputTypeAttribute;
   required?: boolean;
-  defaultValue?: string;
+  defaultValue?: any;
   description?: string;
   placeholder?: string;
   disabled?: boolean;

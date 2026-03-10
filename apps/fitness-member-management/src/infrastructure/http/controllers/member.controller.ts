@@ -3,12 +3,13 @@ import { Request, Response } from "express";
 import { ZodError } from "zod";
 import { CreateMember } from "../../../application/createMember";
 import { ListMembers } from "../../../application/listMembers";
+import { FindMemberById } from "../../../application/findMemberById";
 
 export class MemberController {
   constructor(
     private readonly createMember: CreateMember,
     private readonly listMembers: ListMembers,
-    // private readonly getMemberUseCase: GetMemberUseCase
+    private readonly findMemberById: FindMemberById,
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
@@ -29,21 +30,21 @@ export class MemberController {
     }
   }
 
-  // async getById(req: Request, res: Response): Promise<void> {
-  //   try {
-  //     const id = req.params.id;
-  //     const user = await this.getUserUseCase.execute(id);
+  async getById(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id;
+      const member = await this.findMemberById.execute(id);
       
-  //     if (!user) {
-  //       res.status(404).json({ message: "User not found" });
-  //       return;
-  //     }
+      if (!member) {
+        res.status(404).json({ message: "Member not found" });
+        return;
+      }
       
-  //     res.json(user);
-  //   } catch (error) {
-  //     this.handleError(res, error);
-  //   }
-  // }
+      res.json(member);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  }
 
   private handleError(res: Response, error: unknown) {
     if (error instanceof ZodError) {

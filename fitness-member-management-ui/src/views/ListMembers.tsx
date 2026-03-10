@@ -8,32 +8,47 @@ import { CreateMemberSchema } from '../schemas/member.schema';
 import { useCreateMember, useGetAllMembers } from '../hooks/useMembers';
 import { HeaderObject, SimpleTable } from 'simple-table-core';
 import "simple-table-core/styles.css";
-
-const headers: Array<HeaderObject> = [
-  {
-    accessor: "firstName",
-    label: "First Name",
-    minWidth: 80,
-    width: "1fr",
-    isSortable: true,
-    type: "string",
-  },
-  {
-    accessor: "lastName",
-    label: "Last Name",
-    minWidth: 80,
-    width: "1fr",
-    isSortable: true,
-    type: "string",
-  },
-  { accessor: "email", label: "Email", minWidth: 80, width: "1fr", isSortable: true, type: "string" },
-  { accessor: "age", label: "Age", width: 100, isSortable: true, type: "number" },
-  { accessor: "updateDate", label: "Update Date", width: 150, isSortable: true, type: "date" },
-];
+import { useNavigate } from 'react-router-dom';
 
 export function ListMembers(): React.ReactElement {
   const [openDialog, setOpenDialog] = useState(false);
   const [errors, setErrors] = useState<Record<string, any>>({});
+  const navigate = useNavigate();
+
+  const headers: Array<HeaderObject> = [
+    {
+      accessor: "firstName",
+      label: "First Name",
+      minWidth: 100,
+      width: "1fr",
+      isSortable: true,
+      type: "string",
+    },
+    {
+      accessor: "lastName",
+      label: "Last Name",
+      minWidth: 100,
+      width: "1fr",
+      isSortable: true,
+      type: "string",
+    },
+    { accessor: "email", label: "Email", minWidth: 200, width: "1fr", isSortable: true, type: "string" },
+    { accessor: "age", label: "Age", width: 100, isSortable: true, type: "number" },
+    { accessor: "updateDate", label: "Update Date", width: 150, isSortable: true, type: "date" },
+    {
+      accessor: "actions",
+      label: "Actions",
+      width: 150,
+      type: "string",
+      cellRenderer: ({ row }) => {
+        return (
+          <div>
+            <Button onClick={() => navigate(`/members/${row.id}`)}>Details</Button>
+          </div>
+        );
+      },
+    },
+  ];
 
   const { data: members, isLoading: getAllMembersIsLoading } = useGetAllMembers();
   const { mutate: createMember, isPending: createMemberIsLaoding } = useCreateMember();
@@ -81,24 +96,30 @@ export function ListMembers(): React.ReactElement {
   }
 
   return (
-    <div>
-      <Button onClick={handleOpenDialog}>Create new member</Button>
-      {getAllMembersIsLoading ? <div>Loading...</div> : (
-        <SimpleTable
-          defaultHeaders={headers}
-          rows={members}
-        />
-      )}
-      <Dialog title='Create a new member' open={openDialog} onOpenChange={handleChangeOpenDialog}>
-        <Form onSubmit={handleSubmit} errors={errors}>
-          <Field label='First Name' name='firstName' id='firstName' type='text' disabled={createMemberIsLaoding} required />
-          <Field label='Last Name' name='lastName' id='lastName' type='text' disabled={createMemberIsLaoding} required />
-          <Field label='Email' name='email' id='email' type='email' disabled={createMemberIsLaoding} required />
-          <Field label='Age' name='age' id='age' type='number' disabled={createMemberIsLaoding} required />
-          <Button type='submit' variant='contained' disabled={createMemberIsLaoding}>Submit</Button>
-          <Button onClick={handleCloseDialog} disabled={createMemberIsLaoding} color='error'>Cancel</Button>
-        </Form>
-      </Dialog>
+    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <div style={{ maxWidth: '80%' }}>
+        <h1>Fitness Member Management</h1>
+        <Button onClick={handleOpenDialog}>Create new member</Button>
+        {getAllMembersIsLoading ? <div>Loading...</div> : (
+          <SimpleTable
+            defaultHeaders={headers}
+            customTheme={{
+              rowHeight: 40,
+            }}
+            rows={members}
+          />
+        )}
+        <Dialog title='Create a new member' open={openDialog} onOpenChange={handleChangeOpenDialog}>
+          <Form onSubmit={handleSubmit} errors={errors}>
+            <Field label='First Name' name='firstName' id='firstName' type='text' disabled={createMemberIsLaoding} required />
+            <Field label='Last Name' name='lastName' id='lastName' type='text' disabled={createMemberIsLaoding} required />
+            <Field label='Email' name='email' id='email' type='email' disabled={createMemberIsLaoding} required />
+            <Field label='Age' name='age' id='age' type='number' disabled={createMemberIsLaoding} required />
+            <Button type='submit' variant='contained' disabled={createMemberIsLaoding}>Submit</Button>
+            <Button onClick={handleCloseDialog} disabled={createMemberIsLaoding} color='error'>Cancel</Button>
+          </Form>
+        </Dialog>
+      </div>
     </div>
   )
 }

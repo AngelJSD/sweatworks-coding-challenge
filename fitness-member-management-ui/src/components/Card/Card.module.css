@@ -1,0 +1,10 @@
+.Card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0rem 1rem 1rem 1rem;
+  border: 1px solid var(--color-gray-300);
+  color: var(--color-gray-900);
+  border-radius: 0.375rem;
+}
