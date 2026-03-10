@@ -1,9 +1,10 @@
-import { DataSource } from "typeorm";
+import { DataSource, DataSourceOptions } from "typeorm";
 import { MemberEntity } from "./infrastructure/persistance/entities/member.entity";
 import { MembershipEntity } from "./infrastructure/persistance/entities/membership.entity";
 import { PlanEntity } from "./infrastructure/persistance/entities/plan.entity";
+import { SeederOptions } from "typeorm-extension";
 
-export const dataSource = new DataSource({
+const options: DataSourceOptions & SeederOptions = {
   type: "postgres",
   host: "localhost",
   port: 5432,
@@ -14,7 +15,10 @@ export const dataSource = new DataSource({
   entities: [MemberEntity, MembershipEntity, PlanEntity],
   migrations: [__dirname + '/migrations/*.{ts,js}'],
   subscribers: [],
-});
+  seeds: ['/seeds/**/*.ts'],
+}
+
+export const dataSource = new DataSource(options);
 
 // Helper to initialize the DB
 export const initializeDatabase = async () => {
