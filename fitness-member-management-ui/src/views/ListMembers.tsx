@@ -106,7 +106,7 @@ export function ListMembers(): React.ReactElement {
             customTheme={{
               rowHeight: 40,
             }}
-            rows={members}
+            rows={members ?? []}
           />
         )}
         <Dialog title='Create a new member' open={openDialog} onOpenChange={handleChangeOpenDialog}>

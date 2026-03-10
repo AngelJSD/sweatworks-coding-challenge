@@ -1,5 +1,3 @@
-import { Member } from "../schemas/member.schema";
-
 export type MemberServiceNullData = {
   createMember?: Promise<any> | any;
 }

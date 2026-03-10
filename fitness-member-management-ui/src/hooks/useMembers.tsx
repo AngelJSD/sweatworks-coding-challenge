@@ -16,7 +16,7 @@ export function useCreateMember() {
 
 export function useGetAllMembers() {
   const { memberService } = useServices();
-  return useQuery({
+  return useQuery<Array<Member>>({
     queryKey: ['members'],
     queryFn: async () => memberService.getAllMembers(),
   });
