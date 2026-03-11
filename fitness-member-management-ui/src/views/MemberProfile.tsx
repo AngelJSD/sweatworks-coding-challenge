@@ -1,17 +1,15 @@
-import React, { useState, SubmitEvent } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetMemberById } from '../hooks/useMembers';
 import Card from '../components/Card/Card';
 import Field from '../components/Field/Field';
-import { useCancelMembership, useCreateMembership, useGetAllMembershipsByMemberId } from '../hooks/useMemberships';
+import { useGetAllMembershipsByMemberId } from '../hooks/useMemberships';
 import { HeaderObject, SimpleTable } from 'simple-table-core';
 import Button from '../components/Button/Button';
-import Dialog from '../components/Dialog/Dialog';
-import Form from '../components/Form/Form';
-import z, { ZodError } from 'zod';
-import { CreateMembershipSchema } from '../schemas/membership.schema';
-import { useGetAllPlans } from '../hooks/usePlans';
+import { Membership } from '../schemas/membership.schema';
 import { formatDate } from '../helpers/dateHelper';
+import { CreateMembershipDialog } from './CreateMembershipDialog';
+import { CancelMembershipDialog } from './CancelMembershipDialog';
 
 export function MemberProfile(): React.ReactElement {
   const [openDialog, setOpenDialog] = useState(false);
@@ -65,7 +63,7 @@ export function MemberProfile(): React.ReactElement {
       type: "string",
       cellRenderer: ({ row }) => {
         return (
-          <div>{Date.now() < new Date(row.endDate as string).getTime() && row.cancelDate === null ? 'ACTIVE' : 'INACTIVE'}</div>
+          <div>{calculateStatus(row as Membership)}</div>
       )}
     },
     {
@@ -153,101 +151,13 @@ export function MemberProfile(): React.ReactElement {
   )
 }
 
-function CreateMembershipDialog({
-  memberId,
-  openDialog,
-  onChangeOpenDialog,
-  handleCloseDialog
-}: {
-  memberId?: string;
-  openDialog: boolean;
-  onChangeOpenDialog: (open: boolean) => void;
-  handleCloseDialog: () => void;
-}) {
-  const [errors, setErrors] = useState<Record<string, any>>({});
-
-  const { data: plansData, isLoading: isLoadingPlans } = useGetAllPlans();
-  const { mutate: createMembership, isPending: createMembershipIsLoading } = useCreateMembership();
-
-  const plans = plansData?.map((plan) => ({ label: plan.name, value: plan.id }));
-
-  function handleSuccess(): void {
-    handleCloseDialog()
+function calculateStatus(row: Membership): React.ReactNode {
+  if (row.cancelDate !== null) {
+    return 'CANCELED';
+  }
+  if (Date.now() > new Date(row.endDate).getTime()) {
+    return 'EXPIRED';
   }
 
-  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const planId = formData.get('planId');
-    const startDate = `${formData.get('startDate')}T00:00:00.000Z`;
-    const endDate = `${formData.get('endDate')}T23:59:59.000Z`;
-
-    try {
-      const validatedMembershipData = CreateMembershipSchema.parse({
-        memberId,
-        planId,
-        startDate,
-        endDate,
-      });
-      createMembership({ data: validatedMembershipData, onSuccess: handleSuccess });
-    } catch (error: unknown) {
-      if (error instanceof ZodError) {
-        const flatErrors = z.flattenError(error);
-        setErrors(flatErrors.fieldErrors);
-      }
-    }
-  }
-
-  return (
-    <Dialog title='Add a New Plan' open={openDialog} onOpenChange={onChangeOpenDialog}>
-      <Form onSubmit={handleSubmit} errors={errors}>
-        <Field label='Plan' name='planId' id='planId' type='select' options={plans} disabled={createMembershipIsLoading || isLoadingPlans} required />
-        <Field label='Start Date' name='startDate' id='startDate' type='date' disabled={createMembershipIsLoading} required />
-        <Field label='End Date' name='endDate' id='endDate' type='date' disabled={createMembershipIsLoading} required />
-        <Button type='submit' variant='contained' disabled={createMembershipIsLoading}>Submit</Button>
-        <Button onClick={handleCloseDialog} disabled={createMembershipIsLoading} color='error'>Cancel</Button>
-      </Form>
-    </Dialog>
-  );
-}
-
-
-function CancelMembershipDialog({
-  membershipId,
-  openDialog,
-  onChangeOpenDialog,
-  handleCloseDialog
-}: {
-  membershipId?: string;
-  openDialog: boolean;
-  onChangeOpenDialog: (open: boolean) => void;
-  handleCloseDialog: () => void;
-}) {
-  const { mutate: cancelMembership, isPending: cancelMembershipIsLoading } = useCancelMembership();
-
-  function handleSuccess(): void {
-    handleCloseDialog()
-  }
-
-  function handleCancelMembership() {
-    try {
-      if (!membershipId) {
-        throw Error('memberhipId is undefined')
-      }
-
-      cancelMembership({ data: { membershipId }, onSuccess: handleSuccess });
-    } catch (error: unknown) {
-      console.error(error);
-    }
-  }
-
-  return (
-    <Dialog title='Cancel Membership' open={openDialog} onOpenChange={onChangeOpenDialog}>
-      Are you sure you want to cancel the membership?
-      <div style={{ display: 'flex', gap: '1rem', paddingTop: '1rem', justifyContent: 'flex-end' }}>
-        <Button onClick={handleCloseDialog} variant='contained' disabled={cancelMembershipIsLoading}>No</Button>
-        <Button onClick={handleCancelMembership} disabled={cancelMembershipIsLoading} color='error'>Yes</Button>
-      </div>
-    </Dialog>
-  );
+  return 'ACTIVE';
 }
