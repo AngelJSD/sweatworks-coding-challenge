@@ -27,7 +27,7 @@ export class MembershipEntity {
   member!: MemberEntity;
 
   @ManyToOne(() => PlanEntity, (plan) => plan.memberships)
-  @JoinColumn({ name: 'planId' })
+  @JoinColumn({ name: 'planid' })
   plan!: PlanEntity;
 
   @Column({ name: 'startdate', type: 'timestamp' })

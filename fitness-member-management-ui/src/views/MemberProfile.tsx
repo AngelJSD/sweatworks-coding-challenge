@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useGetMemberById } from '../hooks/useMembers';
 import Card from '../components/Card/Card';
 import Field from '../components/Field/Field';
-import { useCreateMembership, useGetAllMembershipsByMemberId } from '../hooks/useMemberships';
+import { useCancelMembership, useCreateMembership, useGetAllMembershipsByMemberId } from '../hooks/useMemberships';
 import { HeaderObject, SimpleTable } from 'simple-table-core';
 import Button from '../components/Button/Button';
 import Dialog from '../components/Dialog/Dialog';
@@ -15,6 +15,8 @@ import { formatDate } from '../helpers/dateHelper';
 
 export function MemberProfile(): React.ReactElement {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openCancelMembershipDialog, setOpenCancelMembershipDialog] = useState(false);
+  const [membershipIdToCancel, setMembershipIdToCancel] = useState<string | undefined>();
   
   const { memberId } = useParams();
   const { data: memberDetails, isLoading: isLoadingMemberDetails } = useGetMemberById(memberId);
@@ -54,9 +56,37 @@ export function MemberProfile(): React.ReactElement {
       width: "1fr",
       isSortable: true,
       type: "date",
-      cellRenderer: ({ row }) => formatDate(row.cancelDate as string),
+      cellRenderer: ({ row }) => row.cancelDate ? new Date(row.cancelDate as string).toLocaleDateString() : '',
+    },
+    {
+      accessor: "state",
+      label: "State",
+      width: 150,
+      type: "string",
+      cellRenderer: ({ row }) => {
+        return (
+          <div>{Date.now() < new Date(row.endDate as string).getTime() && row.cancelDate === null ? 'ACTIVE' : 'INACTIVE'}</div>
+      )}
+    },
+    {
+      accessor: "actions",
+      label: "Actions",
+      width: 150,
+      type: "string",
+      cellRenderer: ({ row }) => {
+        return (
+          <div>
+            <Button color='error' onClick={() => handleCancelMembership(row.id as string)} disabled={row.cancelDate !== null}>Cancel</Button>
+          </div>
+        );
+      },
     },
   ];
+
+  function handleCancelMembership(membershipId: string) {
+    setMembershipIdToCancel(membershipId);
+    handleOpenCancelMembershipDialog();
+  }
 
   function handleOpenDialog() {
     setOpenDialog(true);
@@ -69,6 +99,20 @@ export function MemberProfile(): React.ReactElement {
   function handleChangeOpenDialog(open: boolean) {
     if (!open) {
       handleCloseDialog()
+    }
+  }
+
+  function handleOpenCancelMembershipDialog() {
+    setOpenCancelMembershipDialog(true);
+  }
+
+  function handleCloseCancelMembershipDialog() {
+    setOpenCancelMembershipDialog(false);
+  }
+
+  function handleChangeOpenCancelMembershipDialog(open: boolean) {
+    if (!open) {
+      handleCloseCancelMembershipDialog()
     }
   }
 
@@ -96,7 +140,7 @@ export function MemberProfile(): React.ReactElement {
             <SimpleTable
               defaultHeaders={headers}
               customTheme={{
-                rowHeight: 40,
+                rowHeight: 48,
               }}
               rows={memberships ?? []}
             />
@@ -104,6 +148,7 @@ export function MemberProfile(): React.ReactElement {
         </Card>
       </div>
       <CreateMembershipDialog memberId={memberId} openDialog={openDialog} onChangeOpenDialog={handleChangeOpenDialog} handleCloseDialog={handleCloseDialog} />
+      <CancelMembershipDialog membershipId={membershipIdToCancel} openDialog={openCancelMembershipDialog} onChangeOpenDialog={handleChangeOpenCancelMembershipDialog} handleCloseDialog={handleCloseCancelMembershipDialog} />
     </div>
   )
 }
@@ -134,8 +179,8 @@ function CreateMembershipDialog({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const planId = formData.get('planId');
-    const startDate = new Date(formData.get('startDate') as string).toISOString();
-    const endDate = new Date(formData.get('endDate') as string).toISOString();
+    const startDate = `${formData.get('startDate')}T00:00:00.000Z`;
+    const endDate = `${formData.get('endDate')}T23:59:59.000Z`;
 
     try {
       const validatedMembershipData = CreateMembershipSchema.parse({
@@ -166,3 +211,43 @@ function CreateMembershipDialog({
   );
 }
 
+
+function CancelMembershipDialog({
+  membershipId,
+  openDialog,
+  onChangeOpenDialog,
+  handleCloseDialog
+}: {
+  membershipId?: string;
+  openDialog: boolean;
+  onChangeOpenDialog: (open: boolean) => void;
+  handleCloseDialog: () => void;
+}) {
+  const { mutate: cancelMembership, isPending: cancelMembershipIsLoading } = useCancelMembership();
+
+  function handleSuccess(): void {
+    handleCloseDialog()
+  }
+
+  function handleCancelMembership() {
+    try {
+      if (!membershipId) {
+        throw Error('memberhipId is undefined')
+      }
+
+      cancelMembership({ data: { membershipId }, onSuccess: handleSuccess });
+    } catch (error: unknown) {
+      console.error(error);
+    }
+  }
+
+  return (
+    <Dialog title='Cancel Membership' open={openDialog} onOpenChange={onChangeOpenDialog}>
+      Are you sure you want to cancel the membership?
+      <div style={{ display: 'flex', gap: '1rem', paddingTop: '1rem', justifyContent: 'flex-end' }}>
+        <Button onClick={handleCloseDialog} variant='contained' disabled={cancelMembershipIsLoading}>No</Button>
+        <Button onClick={handleCancelMembership} disabled={cancelMembershipIsLoading} color='error'>Yes</Button>
+      </div>
+    </Dialog>
+  );
+}

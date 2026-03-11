@@ -1,5 +1,5 @@
 import { Repository, DataSource } from "typeorm";
-import { CreateMembershipInput, Membership } from "../../../domain/models/membership.model";
+import { CancelMembershipInput, CreateMembershipInput, Membership } from "../../../domain/models/membership.model";
 import { MembershipEntity } from "../entities/membership.entity";
 import { MembershipRepositoryInterface } from "../../../domain/repositories/membership.repository.interface";
 import { MembershipMapper } from "../mappers/membership.mapper";
@@ -24,5 +24,9 @@ export class MembershipRepository implements MembershipRepositoryInterface {
     const savedEntity = await this.repository.save(entity);
     
     return MembershipMapper.toDomain(savedEntity);
+  }
+
+  async cancel(cancelMembershipData: CancelMembershipInput): Promise<void> {
+    this.repository.update(cancelMembershipData.membershipId, { cancelDate: new Date() });
   }
 }

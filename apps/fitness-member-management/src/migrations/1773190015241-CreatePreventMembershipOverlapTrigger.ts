@@ -14,7 +14,7 @@ export class CreatePreventMembershipOverlapTrigger1773190015241 implements Migra
                   AND "endDate" > CURRENT_TIMESTAMP
                   AND id <> NEW.id
             ) THEN
-                RAISE EXCEPTION 'Conflicto: El usuario ya tiene una membresía vigente o programada que se solapa.'
+                RAISE EXCEPTION 'Conflict: There is already an active membership.'
                 USING ERRCODE = '45000';
             END IF;
 

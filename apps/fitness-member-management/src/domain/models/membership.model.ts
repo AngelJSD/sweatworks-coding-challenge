@@ -19,6 +19,11 @@ export const CreateMembershipSchema = z.object({
   cancelDate: z.string().optional(),
 });
 
+export const CancelMembershipSchema = z.object({
+  membershipId: z.uuidv4().nonoptional(),
+});
+
 export type Membership = z.infer<typeof MembershipSchema>;
 export type CreateMembershipInput = z.infer<typeof CreateMembershipSchema>;
+export type CancelMembershipInput = z.infer<typeof CancelMembershipSchema>;
 

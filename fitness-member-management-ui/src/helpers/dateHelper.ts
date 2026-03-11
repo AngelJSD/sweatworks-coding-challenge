@@ -3,7 +3,5 @@ export function formatDate(date: string | undefined) {
     return '';
   }
   const selectedDate = new Date(date);
-  const day = selectedDate.getUTCDate();
-  selectedDate.setDate(day)
-  return selectedDate.toLocaleDateString();
+  return `${selectedDate.getUTCMonth() + 1}/${selectedDate.getUTCDate()}/${selectedDate.getUTCFullYear()}`;
 }

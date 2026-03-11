@@ -3,11 +3,13 @@ import { Request, Response } from "express";
 import { ZodError } from "zod";
 import { CreateMembership } from "../../../application/createMembership";
 import { FindAllMembershipsByMemberId } from "../../../application/findAllMembershipsByMemberId";
+import { CancelMembership } from "../../../application/cancelMembership";
 
 export class MembershipController {
   constructor(
     private readonly createMembership: CreateMembership,
     private readonly findAllMembershipsByMemberId: FindAllMembershipsByMemberId,
+    private readonly cancelMembership: CancelMembership,
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {
@@ -30,6 +32,16 @@ export class MembershipController {
       }
       
       res.json(memberships);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  }
+
+  async cancel(req: Request, res: Response): Promise<void> {
+    try {
+      await this.cancelMembership.execute(req.body);
+      
+      res.json({ status: 'ok' });
     } catch (error) {
       this.handleError(res, error);
     }
