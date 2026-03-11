@@ -1,7 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServices } from "../contexts/servicesContext";
-import { Membership } from "../schemas/membership.schema";
+import { CreateMembershipInput, Membership } from "../schemas/membership.schema";
 
+export function useCreateMembership() {
+  const { membershipService } = useServices();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({data}: {data: CreateMembershipInput; onSuccess?: () => void}) => membershipService.createMembership(data),
+    onSuccess: (_data, {onSuccess}) => {
+      queryClient.invalidateQueries({ queryKey: ['memberships'] });
+      onSuccess?.();
+    }
+  });
+}
 
 export function useGetAllMembershipsByMemberId(memberId: string | undefined) {
   const { membershipService } = useServices();

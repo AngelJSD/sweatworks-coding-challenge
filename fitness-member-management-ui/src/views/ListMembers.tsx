@@ -51,7 +51,7 @@ export function ListMembers(): React.ReactElement {
   ];
 
   const { data: members, isLoading: getAllMembersIsLoading } = useGetAllMembers();
-  const { mutate: createMember, isPending: createMemberIsLaoding } = useCreateMember();
+  const { mutate: createMember, isPending: createMemberIsLoading } = useCreateMember();
 
   function handleOpenDialog() {
     setOpenDialog(true);
@@ -111,12 +111,12 @@ export function ListMembers(): React.ReactElement {
         )}
         <Dialog title='Create a new member' open={openDialog} onOpenChange={handleChangeOpenDialog}>
           <Form onSubmit={handleSubmit} errors={errors}>
-            <Field label='First Name' name='firstName' id='firstName' type='text' disabled={createMemberIsLaoding} required />
-            <Field label='Last Name' name='lastName' id='lastName' type='text' disabled={createMemberIsLaoding} required />
-            <Field label='Email' name='email' id='email' type='email' disabled={createMemberIsLaoding} required />
-            <Field label='Age' name='age' id='age' type='number' disabled={createMemberIsLaoding} required />
-            <Button type='submit' variant='contained' disabled={createMemberIsLaoding}>Submit</Button>
-            <Button onClick={handleCloseDialog} disabled={createMemberIsLaoding} color='error'>Cancel</Button>
+            <Field label='First Name' name='firstName' id='firstName' type='text' disabled={createMemberIsLoading} required />
+            <Field label='Last Name' name='lastName' id='lastName' type='text' disabled={createMemberIsLoading} required />
+            <Field label='Email' name='email' id='email' type='email' disabled={createMemberIsLoading} required />
+            <Field label='Age' name='age' id='age' type='number' disabled={createMemberIsLoading} required />
+            <Button type='submit' variant='contained' disabled={createMemberIsLoading}>Submit</Button>
+            <Button onClick={handleCloseDialog} disabled={createMemberIsLoading} color='error'>Cancel</Button>
           </Form>
         </Dialog>
       </div>

@@ -6,12 +6,18 @@ export const MembershipSchema = z.object({
   planId: z.uuidv4().nonoptional(),
   startDate: z.date().nonoptional(),
   endDate: z.date().nonoptional(),
-  cancelDate: z.date(),
+  cancelDate: z.date().nullable(),
   updateDate: z.date().nonoptional(),
   createDate: z.date().nonoptional(),
 });
 
-export const CreateMembershipSchema = MembershipSchema.omit({ updateDate: true, createDate: true, cancelDate: true });
+export const CreateMembershipSchema = z.object({
+  memberId: z.uuidv4().nonoptional(),
+  planId: z.uuidv4().nonoptional(),
+  startDate: z.string().nonoptional(),
+  endDate: z.string().nonoptional(),
+  cancelDate: z.string().optional(),
+});
 
 export type Membership = z.infer<typeof MembershipSchema>;
 export type CreateMembershipInput = z.infer<typeof CreateMembershipSchema>;

@@ -19,6 +19,8 @@ export class MembershipRepository implements MembershipRepositoryInterface {
 
   async save(membership: CreateMembershipInput): Promise<Membership> {
     const entity = this.repository.create(membership);
+    entity.startDate = new Date(entity.startDate);
+    entity.endDate = new Date(entity.endDate);
     const savedEntity = await this.repository.save(entity);
     
     return MembershipMapper.toDomain(savedEntity);

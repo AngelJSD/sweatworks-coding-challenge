@@ -84,7 +84,7 @@
       "seed": {
         "executor": "nx:run-commands",
         "options": {
-          "command": "ts-node ./node_modules/typeorm-extension/bin/cli.cjs seed:run -d apps/fitness-member-management/src/typeorm-setup.ts"
+          "command": "ts-node ./node_modules/typeorm-extension/bin/cli.mjs seed:run -d apps/fitness-member-management/src/typeorm-setup.ts"
         }
       },
       "serve": {

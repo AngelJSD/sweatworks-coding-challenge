@@ -9,6 +9,23 @@ export class MembershipService {
     return new MembershipService();
   }
 
+  async createMembership(data: any) {
+    const res = await fetch(
+      `http://localhost:3000/api/v1/memberships/create`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Error adding a new plan to a member");
+    }
+    return res.json();
+  }
+
   async getAllMembershipsByMemberId(memberId: string | undefined) {
     if (memberId === undefined) {
       throw new Error("Error memberId is undefined");

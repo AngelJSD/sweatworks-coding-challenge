@@ -15,7 +15,7 @@ const options: DataSourceOptions & SeederOptions = {
   entities: [MemberEntity, MembershipEntity, PlanEntity],
   migrations: [__dirname + '/migrations/*.{ts,js}'],
   subscribers: [],
-  seeds: ['/seeds/**/*.ts'],
+  seeds: [__dirname + '/seeds/**/*.ts'],
 }
 
 export const dataSource = new DataSource(options);
