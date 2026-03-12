@@ -1,13 +1,13 @@
 import React from 'react';
-import { useCancelMembership } from "../hooks/useMemberships";
-import Button from '../components/Button/Button';
-import Dialog from '../components/Dialog/Dialog';
+import { useCancelMembership } from "../../../hooks/useMemberships";
+import Button from '../../../components/Button/Button';
+import Dialog from '../../../components/Dialog/Dialog';
 
 export function CancelMembershipDialog({
   membershipId,
   openDialog,
   onChangeOpenDialog,
-  handleCloseDialog
+  handleCloseDialog,
 }: {
   membershipId?: string;
   openDialog: boolean;

@@ -1,3 +1,9 @@
+import { getFreshResponse } from "../helpers/testHelper";
+
+export type PlanServiceNullData = {
+  getAllPlans?: Promise<any> | any;
+}
+
 export class PlanService {
   private constructor() {}
 
@@ -5,8 +11,19 @@ export class PlanService {
     return new PlanService();
   }
 
-  static createNull(): PlanService {
-    return new PlanService();
+  static createNull(data: PlanServiceNullData = {}): PlanService {
+    const planService = new PlanService();
+
+    planService.getAllPlans = async () => {
+      if (data.getAllPlans !== undefined) {
+        return data.getAllPlans instanceof Promise
+          ? getFreshResponse(await data.getAllPlans)
+          : getFreshResponse(data.getAllPlans);
+      }
+      return Promise.resolve({});
+    }
+
+    return planService;
   }
 
   async getAllPlans() {

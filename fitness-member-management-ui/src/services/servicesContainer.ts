@@ -16,6 +16,6 @@ export const createServicesContainer = (): ServicesContainer => ({
 
 export const createNullServicesContainer = (nullData: any = {}): ServicesContainer => ({
   memberService: MemberService.createNull(nullData.memberService),
-  membershipService: MembershipService.createNull(),
-  planService: PlanService.createNull(),
+  membershipService: MembershipService.createNull(nullData.membershipService),
+  planService: PlanService.createNull(nullData.planService),
 })

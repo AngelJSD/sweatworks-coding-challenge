@@ -1,12 +1,12 @@
 import React, { useState, SubmitEvent } from 'react';
-import Field from '../components/Field/Field';
-import { useCreateMembership } from '../hooks/useMemberships';
-import Button from '../components/Button/Button';
-import Dialog from '../components/Dialog/Dialog';
-import Form from '../components/Form/Form';
+import Field from '../../../components/Field/Field';
+import { useCreateMembership } from '../../../hooks/useMemberships';
+import Button from '../../../components/Button/Button';
+import Dialog from '../../../components/Dialog/Dialog';
+import Form from '../../../components/Form/Form';
 import z, { ZodError } from 'zod';
-import { CreateMembershipSchema } from '../schemas/membership.schema';
-import { useGetAllPlans } from '../hooks/usePlans';
+import { CreateMembershipSchema } from '../../../schemas/membership.schema';
+import { useGetAllPlans } from '../../../hooks/usePlans';
 
 export function CreateMembershipDialog({
   memberId,

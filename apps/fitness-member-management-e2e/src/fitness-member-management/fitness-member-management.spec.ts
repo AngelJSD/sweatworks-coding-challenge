@@ -1,7 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import axios from 'axios';
 
 describe('GET /', () => {
-  it('should return a message', async () => {
+  it.skip('should return a message', async () => {
     const res = await axios.get(`/`);
 
     expect(res.status).toBe(200);

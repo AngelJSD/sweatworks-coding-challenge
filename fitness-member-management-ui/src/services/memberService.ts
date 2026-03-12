@@ -1,10 +1,9 @@
+import { getFreshResponse } from "../helpers/testHelper";
+
 export type MemberServiceNullData = {
   createMember?: Promise<any> | any;
+  getMemberById?: Promise<any> | any;
 }
-
-export const getFreshResponse = (response: any): any => {
-  return JSON.parse(JSON.stringify(response));
-};
 
 export class MemberService {
   private constructor() {}
@@ -21,6 +20,15 @@ export class MemberService {
         return data.createMember instanceof Promise
           ? getFreshResponse(await data.createMember)
           : getFreshResponse(data.createMember);
+      }
+      return Promise.resolve({})
+    }
+
+    memberService.getMemberById = async () => {
+      if (data.getMemberById !== undefined) {
+        return data.getMemberById instanceof Promise
+          ? getFreshResponse(await data.getMemberById)
+          : getFreshResponse(data.getMemberById);
       }
       return Promise.resolve({})
     }

@@ -1,3 +1,11 @@
+import { getFreshResponse } from "../helpers/testHelper";
+
+export type MembershipServiceNullData = {
+  getAllMembershipsByMemberId?: Promise<any> | any;
+  createMembership?: Promise<any> | any;
+  cancelMembership?: Promise<any> | any;
+}
+
 export class MembershipService {
   private constructor() {}
 
@@ -5,8 +13,37 @@ export class MembershipService {
     return new MembershipService();
   }
 
-  static createNull(): MembershipService {
-    return new MembershipService();
+  static createNull(data: MembershipServiceNullData = {}): MembershipService {
+    const membershipService = new MembershipService();
+    
+    membershipService.getAllMembershipsByMemberId = async () => {
+      if (data.getAllMembershipsByMemberId !== undefined) {
+        return data.getAllMembershipsByMemberId instanceof Promise
+          ? getFreshResponse(await data.getAllMembershipsByMemberId)
+          : getFreshResponse(data.getAllMembershipsByMemberId);
+      }
+      return Promise.resolve({});
+    }
+
+    membershipService.createMembership = async () => {
+      if (data.createMembership !== undefined) {
+        return data.createMembership instanceof Promise
+          ? getFreshResponse(await data.createMembership)
+          : getFreshResponse(data.createMembership);
+      }
+      return Promise.resolve({});
+    }
+
+    membershipService.cancelMembership = async () => {
+      if (data.cancelMembership !== undefined) {
+        return data.cancelMembership instanceof Promise
+          ? getFreshResponse(await data.cancelMembership)
+          : getFreshResponse(data.cancelMembership);
+      }
+      return Promise.resolve({});
+    }
+
+    return membershipService;
   }
 
   async createMembership(data: any) {
