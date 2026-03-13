@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../node_modules/.vite/fitness-member-management-ui',
+  cacheDir: '.../../node_modules/.vite/fitness-member-management-ui',
   server: {
     port: 4200,
     host: 'localhost',
