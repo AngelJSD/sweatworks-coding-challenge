@@ -7,7 +7,7 @@
       "path": "./apps/fitness-member-management"
     },
     {
-      "path": "./fitness-member-management-ui-e2e"
+      "path": "./apps/fitness-member-management-ui-e2e"
     },
     {
       "path": "./apps/fitness-member-management-ui"
