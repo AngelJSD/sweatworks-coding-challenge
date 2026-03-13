@@ -1,11 +1,11 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createNullServicesContainer } from "../../services/servicesContainer";
-import { ServicesProvider } from "../../contexts/servicesContext";
-import { calculateStatus, ListMemberships } from "./ListMemberships/ListMemberships";
-import { MembershipServiceNullData } from "../../services/membershipService";
-import { PlanServiceNullData } from "../../services/planService";
+import { createNullServicesContainer } from "../../../services/servicesContainer";
+import { ServicesProvider } from "../../../contexts/servicesContext";
+import { calculateStatus, ListMemberships } from "./ListMemberships";
+import { MembershipServiceNullData } from "../../../services/membershipService";
+import { PlanServiceNullData } from "../../../services/planService";
 
 const renderComponent = (
   nullServiceConfig: { membershipService?: MembershipServiceNullData, planService?: PlanServiceNullData } = {}

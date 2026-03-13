@@ -1,6 +1,7 @@
 import { getFreshResponse } from "../helpers/testHelper";
 
 export type MemberServiceNullData = {
+  getAllMembers?: Promise<any> | any;
   createMember?: Promise<any> | any;
   getMemberById?: Promise<any> | any;
 }
@@ -14,6 +15,15 @@ export class MemberService {
 
   static createNull(data: MemberServiceNullData = {}): MemberService {
     const memberService = new MemberService();
+
+    memberService.getAllMembers = async () => {
+      if (data.getAllMembers !== undefined) {
+        return data.getAllMembers instanceof Promise
+          ? getFreshResponse(await data.getAllMembers)
+          : getFreshResponse(data.getAllMembers);
+      }
+      return Promise.resolve({})
+    }
 
     memberService.createMember = async () => {
       if (data.createMember !== undefined) {

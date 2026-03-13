@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { ListMembers } from '../views/ListMembers';
+import { ListMembers } from '../views/ListMembers/ListMembers';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemberProfile } from '../views/MemberProfile/MemberProfile';
 

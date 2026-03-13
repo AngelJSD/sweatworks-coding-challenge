@@ -1,11 +1,11 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createNullServicesContainer } from "../../services/servicesContainer";
-import { ServicesProvider } from "../../contexts/servicesContext";
-import { MembershipServiceNullData } from "../../services/membershipService";
-import { CancelMembershipDialog } from "./ListMemberships/CancelMembershipDialog";
-import { Deferred } from "../../helpers/testHelper";
+import { createNullServicesContainer } from "../../../services/servicesContainer";
+import { ServicesProvider } from "../../../contexts/servicesContext";
+import { MembershipServiceNullData } from "../../../services/membershipService";
+import { CancelMembershipDialog } from "./CancelMembershipDialog";
+import { Deferred } from "../../../helpers/testHelper";
 import userEvent from "@testing-library/user-event";
 
 const renderComponent = (
