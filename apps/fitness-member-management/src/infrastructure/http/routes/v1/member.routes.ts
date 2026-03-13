@@ -8,7 +8,7 @@ import { FindMemberById } from "../../../../application/findMemberById";
 
 const membersRouter = Router();
 
-const memberRepository = new MemberRepository(dataSource);
+const memberRepository = MemberRepository.create(dataSource);
 const createMember = new CreateMember(memberRepository);
 const listMembers = new ListMembers(memberRepository);
 const findMemberById = new FindMemberById(memberRepository);

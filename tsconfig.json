@@ -4,9 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/fitness-member-management-e2e"
-    },
-    {
       "path": "./apps/fitness-member-management"
     },
     {

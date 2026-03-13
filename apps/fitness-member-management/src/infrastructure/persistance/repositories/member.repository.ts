@@ -7,8 +7,26 @@ import { MemberRepositoryInterface } from "../../../domain/repositories/member.r
 export class MemberRepository implements MemberRepositoryInterface {
   private repository: Repository<MemberEntity>;
 
-  constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(MemberEntity);
+  private constructor(repository: Repository<MemberEntity>) {
+    this.repository = repository;
+  }
+
+  static create(dataSource: DataSource): MemberRepository {
+    return new MemberRepository(dataSource.getRepository(MemberEntity));
+  }
+
+  static createNull(initialData: MemberEntity[] = []): MemberRepository {
+    const stub = {
+      findOneBy: async (where: any) => initialData.find(e => e.id === where.id) || null,
+      find: async () => [...initialData],
+      create: (data: any) => ({ ...data, id: crypto.randomUUID() } as MemberEntity),
+      save: async (entity: MemberEntity) => {
+        initialData.push(entity);
+        return entity;
+      },
+    } as unknown as Repository<MemberEntity>;
+
+    return new MemberRepository(stub);
   }
 
   async findById(id: string): Promise<Member | undefined> {
