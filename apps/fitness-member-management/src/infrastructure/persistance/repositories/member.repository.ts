@@ -17,10 +17,19 @@ export class MemberRepository implements MemberRepositoryInterface {
 
   static createNull(initialData: MemberEntity[] = []): MemberRepository {
     const stub = {
-      findOneBy: async (where: any) => initialData.find(e => e.id === where.id) || null,
+      findOneBy: async (where: any) => {
+        const keys = Object.keys(where);
+        return initialData.find(entity => {
+          return keys.every(key => (entity as any)[key] === where[key]);
+        }) || null;
+      },
       find: async () => [...initialData],
       create: (data: any) => ({ ...data, id: crypto.randomUUID() } as MemberEntity),
       save: async (entity: MemberEntity) => {
+        const now = new Date();
+        entity.createDate = now;
+        entity.updateDate = now;
+
         initialData.push(entity);
         return entity;
       },
@@ -31,6 +40,14 @@ export class MemberRepository implements MemberRepositoryInterface {
 
   async findById(id: string): Promise<Member | undefined> {
     const entity = await this.repository.findOneBy({ id });
+    
+    if (!entity) return undefined;
+
+    return MemberMapper.toDomain(entity);
+  }
+
+  async findByEmail(email: string): Promise<Member | undefined> {
+    const entity = await this.repository.findOneBy({ email });
     
     if (!entity) return undefined;
 

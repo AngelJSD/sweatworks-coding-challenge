@@ -6,6 +6,10 @@ export class CreateMember {
 
   async execute(data: unknown): Promise<Member> {
     const input = CreateMemberSchema.parse(data);
+    const emailMatch = await this.userRepository.findByEmail(input.email);
+    if (emailMatch !== undefined) {
+      throw Error('Email already in use');
+    }
     const savedUser = await this.userRepository.save(input);
 
     return savedUser;
